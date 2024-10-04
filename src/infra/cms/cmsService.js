@@ -3,25 +3,34 @@
 const TOKEN = process.env.NEXT_PUBLIC_CMS_TOKEN;
 
 export async function cmsService({query}){
-   
-  const pageContentResponse= await fetch('https://graphql.datocms.com',{
-    method:'POST',
-    headers:{
-      'Content-type':'application/json',
-      'Authorization':'Bearer ' + TOKEN
-    },
-    body: JSON.stringify({
-      query
+  
+  try{
+    const pageContentResponse= await fetch('https://graphql.datocms.com',{
+      method:'POST',
+      headers:{
+        'Content-type':'application/json',
+        'Authorization':'Bearer ' + TOKEN
+      },
+      body: JSON.stringify({
+        query
+      })
     })
-  })
-  .then(async(repostaDoSever)=>{
-      const body = await repostaDoSever.json();
-      return body;
-  })
+    .then(async(repostaDoSever)=>{
+        const body = await repostaDoSever.json();
+        if(!body.errors) return body;
+        throw new Error(JSON.stringify(body));
+    })
+  
+    console.log('pageContentResponse ==> ',pageContentResponse)
+  
+    return{
+      data:pageContentResponse.data,
+    }
+  }
+  catch(err){
+    throw new Error(err.message);
+    
+  }
 
-  console.log('pageContentResponse ==> ',pageContentResponse)
-
-  return{
-    data:pageContentResponse,
-  }  
+  
 }
