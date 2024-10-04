@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Footer } from '../../components/commons/Footer';
 import { Menu } from '../../components/commons/Menu';
 import { Box, Text, theme } from '../../theme/components';
-
+import {cmsService} from '../../infra/cms/cmsService';
 export async function getStaticPaths() {
   return {
     paths: [
@@ -13,8 +13,28 @@ export async function getStaticPaths() {
   };
 }
 
-export function getStaticProps({ params }) {
+export async function getStaticProps({ params }) {
   const { id } = params;
+  
+  //https://graphql.datocms.com/
+  const contentQuery = `
+    query{
+      contentFaqQuestion{
+        title
+        content{
+          value
+        }
+        
+      }
+    }
+  `
+
+   const {data} = await cmsService({
+    query :contentQuery
+   }); 
+
+   console.log('Dados cms',data);
+
   return {
     props: {
       id,
