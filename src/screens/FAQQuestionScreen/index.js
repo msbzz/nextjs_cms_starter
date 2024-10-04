@@ -1,25 +1,21 @@
-import Head from 'next/head';
-import { Footer } from '../../components/commons/Footer';
-import { Menu } from '../../components/commons/Menu';
-import { Box, Text, theme } from '../../theme/components';
-import {cmsService} from '../../infra/cms/cmsService';
-import { renderNodeRule, StructuredText } from 'react-datocms';
-import { isHeading } from 'datocms-structured-text-utils';
+import Head from "next/head";
+import { Footer } from "../../components/commons/Footer";
+import { Menu } from "../../components/commons/Menu";
+import { Box, Text, theme } from "../../theme/components";
+import { cmsService } from "../../infra/cms/cmsService";
+import { renderNodeRule, StructuredText } from "react-datocms";
+import { isHeading } from "datocms-structured-text-utils";
 
 export async function getStaticPaths() {
   return {
-    paths: [
-      { params: { id: 'f138c88d' } },
-      { params: { id: 'h138c88d' } },
-    ],
+    paths: [{ params: { id: "f138c88d" } }, { params: { id: "h138c88d" } }],
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
   const { id } = params;
-  
- 
+
   const contentQuery = `
     query{
       contentFaqQuestion{
@@ -30,24 +26,25 @@ export async function getStaticProps({ params }) {
         
       }
     }
-  `
+  `;
 
-   const {data} = await cmsService({
-    query :contentQuery
-   }); 
-
-   //console.log('Dados cms',data);
+  const { data } = await cmsService({
+    query: contentQuery,
+  });
 
   return {
     props: {
+      cmsContent: data,
       id,
       title: data.contentFaqQuestion.title,
       content: data.contentFaqQuestion.content,
-    }
-  }
+    },
+  };
 }
 
-export default function FAQQuestionScreen({ title, content }) {
+export default function FAQQuestionScreen({ cmsContent }) {
+  //console.log("cmsContent ==>>  ", cmsContent);
+  console.log('footer =>',cmsContent.globalContent.globalFooter.description)
   return (
     <>
       <Head>
@@ -67,43 +64,44 @@ export default function FAQQuestionScreen({ title, content }) {
       >
         <Box
           styleSheet={{
-            flexDirection: 'column',
-            width: '100%',
+            flexDirection: "column",
+            width: "100%",
             maxWidth: theme.space.xcontainer_lg,
-            marginHorizontal: 'auto',
+            marginHorizontal: "auto",
           }}
         >
           <Text tag="h1" variant="heading1">
-            {title}
- 
+            {cmsContent.contentFaqQuestion.title}
           </Text>
- 
-          <StructuredText 
-          data={content}
-          customNodeRules={[
-            renderNodeRule(isHeading,({node,children,key})=>{
-              const tag=`h${node.level}` ;
-              const variant =`heading${node.level}`;
-              console.log('node ==>> ',node)
-              return (
-                <Text tag={tag} variant={variant} key={key}>
-                  {children}
-                </Text>
-              )
-            })
-          ]}
-          />
 
+          <StructuredText
+            data={cmsContent.contentFaqQuestion.content}
+            customNodeRules={[
+              renderNodeRule(isHeading, ({ node, children, key }) => {
+                const tag = `h${node.level}`;
+                const variant = `heading${node.level}`;
+
+                return (
+                  <Text tag={tag} variant={variant} key={key}>
+                    {children}
+                  </Text>
+                );
+              }),
+            ]}
+          />
 
           {/* <pre>
             {JSON.stringify(content,null,4)}
           </pre> */}
           {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
- 
         </Box>
       </Box>
-
-      <Footer />
+      <Footer
+        description={
+          cmsContent.globalContent?.globalFooter?.description ||
+          "Descrição padrão"
+        }
+      />
     </>
-  )
+  );
 }

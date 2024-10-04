@@ -2,6 +2,13 @@
 
 const TOKEN = process.env.NEXT_PUBLIC_CMS_TOKEN;
 
+const globalQuery = `
+query{
+  globalFooter{
+     description
+    }
+}`;
+
 export async function cmsService({query}){
   
   try{
@@ -21,10 +28,30 @@ export async function cmsService({query}){
         throw new Error(JSON.stringify(body));
     })
   
-    console.log('pageContentResponse ==> ',pageContentResponse)
+    const globalContentResponse= await fetch('https://graphql.datocms.com',{
+      method:'POST',
+      headers:{
+        'Content-type':'application/json',
+        'Authorization':'Bearer ' + TOKEN
+      },
+      body: JSON.stringify({
+        query:globalQuery,
+      })
+    })
+
+    .then(async(repostaDoSever)=>{
+        const body = await repostaDoSever.json();
+        if(!body.errors) return body;
+        throw new Error(JSON.stringify(body));
+    })
   
     return{
-      data:pageContentResponse.data,
+      data: {
+        ...pageContentResponse.data,
+        globalContent:{
+        ...globalContentResponse.data,
+        },
+      },
     }
   }
   catch(err){
