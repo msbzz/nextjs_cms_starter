@@ -18,7 +18,7 @@ export async function cmsService({
 }){
   
  const END_POINT= preview ? PREVIEW_ENDPOINT:BASE_ENDPOINT;
-  console.log('END_POINT ==>>> ',END_POINT)
+  console.log('cmsService QUERY  ==>>> ',query)
   try{
     const pageContentResponse= await fetch(END_POINT,{
       method:'POST',
@@ -35,7 +35,7 @@ export async function cmsService({
         if(!body.errors) return body;
         throw new Error(JSON.stringify(body));
     })
-  
+    
     const globalContentResponse= await fetch(END_POINT,{
       method:'POST',
       headers:{

@@ -3,20 +3,27 @@ import { Menu } from "../../components/commons/Menu";
 import { Footer } from "../../components/commons/Footer";
 import { theme, Box, Button, Text, Image } from "../../theme/components";
 import { pageHOC } from "../../components/wrappers/pageHOC";
+import {cmsService} from "../../infra/cms/cmsService"
 
-export function getStaticProps() {
+export async function getStaticProps({preview}) {
+
+  const { data: cmsContent } = await cmsService({
+    query: `
+      query{
+        __typename
+      }
+    `,
+    preview,
+  });
+
+  //console.log('cmsContent ==>>' ,cmsContent)
   return {
     props: {
-      cmsContent: {
-        globalContent:{ 
-          globalFooter: { 
-            description: "roda pé mané" 
-          } 
-        }
-      },
+      cmsContent,
     },
-  } 
+  }
 }
+  
 
 function HomeScreen() {
   return (
