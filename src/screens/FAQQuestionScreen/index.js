@@ -13,7 +13,7 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, preview }) {
   const { id } = params;
 
   const contentQuery = `
@@ -30,6 +30,7 @@ export async function getStaticProps({ params }) {
 
   const { data } = await cmsService({
     query: contentQuery,
+    preview,
   });
 
   return {
@@ -44,7 +45,7 @@ export async function getStaticProps({ params }) {
 
 export default function FAQQuestionScreen({ cmsContent }) {
   //console.log("cmsContent ==>>  ", cmsContent);
-  console.log('footer =>',cmsContent.globalContent.globalFooter.description)
+  //console.log('footer =>',cmsContent.globalContent.globalFooter.description)
   return (
     <>
       <Head>
