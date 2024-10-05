@@ -1,6 +1,10 @@
-import { Box, Text, theme,Link } from "../../../theme/components";
+import { getCMSContent } from "../../../infra/cms/CMSProvider";
+import { Box, Text, theme, Link } from "../../../theme/components";
 
-export function Footer({ description }) {
+export function Footer() {
+  const description =
+    getCMSContent().globalContent?.globalFooter?.description ||
+    "Descrição padrão";
   return (
     <Box
       tag="footer"

@@ -5,6 +5,7 @@ import { Box, Text, theme } from "../../theme/components";
 import { cmsService } from "../../infra/cms/cmsService";
 import { renderNodeRule, StructuredText } from "react-datocms";
 import { isHeading } from "datocms-structured-text-utils";
+import CMSProvider from "../../infra/cms/CMSProvider";
 
 export async function getStaticPaths() {
   return {
@@ -47,7 +48,7 @@ export default function FAQQuestionScreen({ cmsContent }) {
   //console.log("cmsContent ==>>  ", cmsContent);
   //console.log('footer =>',cmsContent.globalContent.globalFooter.description)
   return (
-    <>
+    <CMSProvider cmsContent={cmsContent}>
       <Head>
         <title>FAQ - Alura</title>
       </Head>
@@ -97,12 +98,7 @@ export default function FAQQuestionScreen({ cmsContent }) {
           {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
         </Box>
       </Box>
-      <Footer
-        description={
-          cmsContent.globalContent?.globalFooter?.description ||
-          "Descrição padrão"
-        }
-      />
-    </>
+      <Footer/>
+    </CMSProvider>
   );
 }
