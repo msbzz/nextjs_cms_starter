@@ -1,4 +1,4 @@
-import { getCMSContent, getCMSContent_V1 } from "../../../infra/cms/CMSProvider";
+import { getCMSContent } from "../../../infra/cms/CMSProvider";
 import { Box, Text, theme, Link } from "../../../theme/components";
 
 export function Footer() {
