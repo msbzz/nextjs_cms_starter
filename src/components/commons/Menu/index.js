@@ -1,6 +1,6 @@
 import { Box, Image, Link, theme } from '../../../theme/components';
 
-export function Menu() {
+export function Menu(props) {
   return (
     <Box
       tag="header"

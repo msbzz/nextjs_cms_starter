@@ -1,18 +1,24 @@
 import { cmsSections } from "../../components/cmsSections";
-import { getCMSContent } from "./CMSProvider"
+import { getCMSContent } from "./CMSProvider";
 
-export function CMSSectionRender({pageName}){
+export function CMSSectionRender({ pageName }) {
+
+  console.log('>>> CMSSectionRender pageName <<<',pageName);
+
   //${pageName}.pageContent[2].id
   //console.log(getCMSContent(`${pageName}.pageContent[2].description`))
   const sections = getCMSContent(`${pageName}.pageContent`);
   
-  return sections.map((sectionProps,id)=>{
-    console.log(sectionProps);
+  // console.log('PAGE CONTENT',`${pageName}.pageContent`)
+  // console.log('>>> sections <<<',sections)
+
+  return sections.map((sectionProps, id) => {
+    //console.log('>>> CMSSectionRender <<<',sectionProps.compomentName);
     const Component = cmsSections[sectionProps.compomentName];
-    return (
-    <p key={id}>
-      <Component/>
-    </p>
-    )
+     
+
+    if(!Component) return null;
+
+    return <Component {...sectionProps} key={id} />;
   });
 }

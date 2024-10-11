@@ -132,4 +132,6 @@ dist
 #outros
 /public/
 .txt
+*bkp*
+*bck*
 

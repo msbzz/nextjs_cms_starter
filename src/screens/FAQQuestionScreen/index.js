@@ -5,33 +5,73 @@ import { Box, Text, theme } from "../../theme/components";
 import { cmsService } from "../../infra/cms/cmsService";
 import { renderNodeRule, StructuredText } from "react-datocms";
 import { isHeading } from "datocms-structured-text-utils";
-import {pageHOC} from "../../components/wrappers/pageHOC"
+import { pageHOC } from "../../components/wrappers/pageHOC";
 import CMSProvider from "../../infra/cms/CMSProvider";
+import { CMSSectionRender } from "../../infra/cms/CMSSectionRender";
 
 export async function getStaticPaths() {
+  const pathsQuery = `
+query($first:IntType,$skip:IntType){
+ allContentFaqQuestions(first:$first,skip:$skip){
+  id
+  title
+}
+} 
+`;
+  const { data } = await cmsService({
+    query: pathsQuery,
+    variables: {
+      first: 100,
+      skip: 0,
+    },
+  });
+  //console.log(">>>FAQQuestionScreen teste allContentFaqQuestions <<<", data.allContentFaqQuestions);
+
+  const paths1 = data.allContentFaqQuestions.map(({ id }) => {
+    return {
+      params: { id },
+    }
+  })
+
+  // const paths = "";
+  console.log(">>>FAQQuestionScreen teste paths1 <<<", paths1);
+
   return {
-    paths: [{ params: { id: "f138c88d" } }, { params: { id: "h138c88d" } }],
+    paths: paths1,
     fallback: false,
   };
+  // return {
+  //   paths: [
+  //     { params: { id: "YuEOq1NaRrC1I9gdHgttFA" } },
+  //     { params: { id: "PWBRiq8VTl6kKbkDMAWiwQ" } },
+  //     { params: { id: "Ay6h2U0TQHONKlY7rLmv5Q" } },
+  //   ],
+  //   fallback: false,
+  //   fallback: false,
+  // };
 }
 
 export async function getStaticProps({ params, preview }) {
   const { id } = params;
 
   const contentQuery = `
-    query{
-      contentFaqQuestion{
-        title
-        content{
-          value
-        }
-        
-      }
-    }
+query($id:ItemId) {
+ contentFaqQuestion(filter:{
+  id:{
+    eq: $id
+  } }){
+  id
+  title
+  
+}
+} 
   `;
 
   const { data } = await cmsService({
     query: contentQuery,
+    variables: {
+      id: id,
+    },
     preview,
   });
 
@@ -39,15 +79,24 @@ export async function getStaticProps({ params, preview }) {
     props: {
       cmsContent: data,
       id,
-      title: data.contentFaqQuestion.title,
-      content: data.contentFaqQuestion.content,
+      title: 'Title temp',//data.contentFaqQuestion.title,
+      content: 'Content temp',//data.contentFaqQuestion.content,
     },
   };
 }
 
-  function FAQQuestionScreen({ cmsContent }) {
-  //console.log("cmsContent ==>>  ", cmsContent);
+// function FAQQuestionScreen({ props }) {
+//   // return <h1>FAQQuestionScreen</h1>;
+//   console.log('>>> FAQQuestionScreen///CMSSectionRender <<<',props);
+//   <CMSSectionRender pageName="pageFaq" {...props}/>
+// }
+
+function FAQQuestionScreen({ cmsContent, props }) {
+  console.log("FAQ QUESTION SCREEN cmsContent ==>>  ", props);
+  //console.log("FAQ QUESTION SCREEN cmsContent ==>>  ", cmsContent.contentFaqQuestion.title);
   //console.log('footer =>',cmsContent.globalContent.globalFooter.description)
+
+  //console.log('>>FAQ QUESTION SCREEN data <<',cmsContent.allContentFaqQuestions[0].title);
   return (
     <>
       <Head>
@@ -73,7 +122,7 @@ export async function getStaticProps({ params, preview }) {
             marginHorizontal: "auto",
           }}
         >
-          <Text tag="h1" variant="heading1">
+          <Text tag="h1" variant="heading1"> 
             {cmsContent.contentFaqQuestion.title}
           </Text>
 
@@ -81,7 +130,7 @@ export async function getStaticProps({ params, preview }) {
             data={cmsContent.contentFaqQuestion.content}
             customNodeRules={[
               renderNodeRule(isHeading, ({ node, children, key }) => {
-                const tag = `h${node.level}`;
+                // const tag =`h${node.level}`;
                 const variant = `heading${node.level}`;
 
                 return (
@@ -99,9 +148,9 @@ export async function getStaticProps({ params, preview }) {
           {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
         </Box>
       </Box>
-      <Footer/>
+      <Footer />
     </>
   );
 }
 
-export default pageHOC(FAQQuestionScreen)
+export default pageHOC(FAQQuestionScreen);

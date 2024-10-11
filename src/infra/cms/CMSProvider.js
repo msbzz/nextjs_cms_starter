@@ -7,11 +7,13 @@ const CMSContext = React.createContext({
 export const getCMSContent = (path='')=>{
   const cmsContent=React.useContext(CMSContext).cmsContent;
   
+   console.log('>>> getCMSContent / cmsContent <<<',cmsContent)
+
   if(path==='') return cmsContent;
 
   const outPut = get(cmsContent,path);
   
-  if(!outPut) throw new Error(`Não foi possível encontrar a chave "${path}". Reveja sua query e tente novamente.`)
+  if(!outPut)  return 'Footer not fond' //throw new Error(`Não foi possível encontrar a chave "${path}". Reveja sua query e tente novamente.`)
   
   return outPut;
 }

@@ -3,11 +3,11 @@ export default async function handler(req,res){
   const previousPage = req.headers.referer;
 
 
-  console.log('previousPage ===> ',previousPage);
+  //console.log('previousPage ===> ',previousPage);
 
    // SE TIVER LIGADO O PREVIEW DESLIGA 
   if(req.preview){
-    console.log('SE TIVER LIGADO O PREVIEW DESLIGA')
+    //console.log('SE TIVER LIGADO O PREVIEW DESLIGA')
     res.clearPreviewData();
     res.writeHead(307,{Location:previousPage});
     return res.end();
@@ -19,7 +19,7 @@ if(req.query.password!==password){
 }
 
   // SE TIVER DESLIGADO O PREVIEW LIGA 
-  console.log('SE TIVER DESLIGADO O PREVIEW LIGA')
+  //console.log('SE TIVER DESLIGADO O PREVIEW LIGA')
   res.setPreviewData({});
   res.writeHead(307,{Location:previousPage});
   res.end();

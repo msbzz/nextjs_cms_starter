@@ -14,11 +14,12 @@ const PREVIEW_ENDPOINT ='https://graphql.datocms.com/preview';
 
 export async function cmsService({
   query,
+  variables,
   preview
 }){
   
  const END_POINT= preview ? PREVIEW_ENDPOINT:BASE_ENDPOINT;
-  console.log('cmsService QUERY  ==>>> ',query)
+  //console.log('cmsService QUERY  ==>>> ',query)
   try{
     const pageContentResponse= await fetch(END_POINT,{
       method:'POST',
@@ -27,7 +28,8 @@ export async function cmsService({
         'Authorization':'Bearer ' + TOKEN
       },
       body: JSON.stringify({
-        query
+        query,
+        variables,
       })
     })
     .then(async(repostaDoSever)=>{

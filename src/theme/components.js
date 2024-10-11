@@ -31,7 +31,9 @@ export function Link({ href, ...props }) {
       ...props.styleSheet,
     }
   };
+  
 
+  //console.log('>>> click link <<<<',href);
   if(href.startsWith('http')) {
     return <Box as={'a'} {...finalProps} />
   }
