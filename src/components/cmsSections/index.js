@@ -7,6 +7,10 @@ import PagFaqDisplayQuestions from '../cmsSections/pagFaqDisplayQuestions'
 import PagFaqDisplayScreen from "./PagFaqDisplayScreen";
 export const cmsSections= {
   
+
+  contentFaqQuestion:(props)=>{
+    return <PagScreenTest  {...props}/>;
+   },
   PagefaqDisplayquestionsectionRecord:(props)=>{
     return <PagFaqDisplayQuestions {...props}/>;
   },
@@ -14,10 +18,11 @@ export const cmsSections= {
   PagefaqDisplayScreeeRecord:(props)=>{
     <PagFaqDisplayScreen {...props}/>
   },
-
+   
   CommonSeoBlockRecord:(props)=> <SEOBlocks {...props}/>,
   CommonMenuRecord:(props)=> <Menu {...props}/>,
   PagehomeHerosectionRecord:(props)=> <PagehomeHerosection {...props}/>,
   CommonFooterRecord:(props)=><Footer {...props}/>
+  
 }
  

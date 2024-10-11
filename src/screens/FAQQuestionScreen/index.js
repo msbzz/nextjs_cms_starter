@@ -9,12 +9,34 @@ import { pageHOC } from "../../components/wrappers/pageHOC";
 import CMSProvider from "../../infra/cms/CMSProvider";
 import { CMSSectionRender } from "../../infra/cms/CMSSectionRender";
 
+
+const extractText = (content) => {
+  let text = '';
+  // Verifica se o conteúdo tem a estrutura correta e acessa a chave 'value.document'
+  if (content?.value?.document?.children) {
+    content.value.document.children.forEach((child) => {
+      if (child.type === "paragraph" && child.children) {
+        child.children.forEach((span) => {
+          if (span.type === "span" && span.value) {
+            text += span.value;
+          }
+        });
+      }
+    });
+  }
+  return text;
+};
+
+
 export async function getStaticPaths() {
   const pathsQuery = `
 query($first:IntType,$skip:IntType){
  allContentFaqQuestions(first:$first,skip:$skip){
   id
   title
+  contentQuestion{
+      value
+    }
 }
 } 
 `;
@@ -25,7 +47,7 @@ query($first:IntType,$skip:IntType){
       skip: 0,
     },
   });
-  //console.log(">>>FAQQuestionScreen teste allContentFaqQuestions <<<", data.allContentFaqQuestions);
+  //console.log(">>>FAQQuestionScreen teste getStaticPaths <<<", data.allContentFaqQuestions);
 
   const paths1 = data.allContentFaqQuestions.map(({ id }) => {
     return {
@@ -34,7 +56,7 @@ query($first:IntType,$skip:IntType){
   })
 
   // const paths = "";
-  console.log(">>>FAQQuestionScreen teste paths1 <<<", paths1);
+  //console.log(">>>FAQQuestionScreen teste paths1 <<<", paths1);
 
   return {
     paths: paths1,
@@ -52,6 +74,7 @@ query($first:IntType,$skip:IntType){
 }
 
 export async function getStaticProps({ params, preview }) {
+   
   const { id } = params;
 
   const contentQuery = `
@@ -62,7 +85,9 @@ query($id:ItemId) {
   } }){
   id
   title
-  
+  contentQuestion{
+      value
+    }
 }
 } 
   `;
@@ -75,28 +100,33 @@ query($id:ItemId) {
     preview,
   });
 
+  const contentText = extractText(data.contentFaqQuestion.contentQuestion);     
+ 
+  const props = {
+    cmsContent: data,
+    id,
+    faqScreen:'faqScreen',
+    title: data.contentFaqQuestion.title,
+    content: contentText,//data.contentFaqQuestion.content,
+  };
+   console.log("FAQ QUESTION SCREEN getStaticProps desc ==>>  ",
+    props)
   return {
-    props: {
-      cmsContent: data,
-      id,
-      title: 'Title temp',//data.contentFaqQuestion.title,
-      content: 'Content temp',//data.contentFaqQuestion.content,
-    },
+    props,
   };
 }
 
-// function FAQQuestionScreen({ props }) {
-//   // return <h1>FAQQuestionScreen</h1>;
-//   console.log('>>> FAQQuestionScreen///CMSSectionRender <<<',props);
-//   <CMSSectionRender pageName="pageFaq" {...props}/>
-// }
-
+ 
 function FAQQuestionScreen({ cmsContent, props }) {
-  console.log("FAQ QUESTION SCREEN cmsContent ==>>  ", props);
-  //console.log("FAQ QUESTION SCREEN cmsContent ==>>  ", cmsContent.contentFaqQuestion.title);
+  
+;
+  //console.log("FAQ QUESTION SCREEN descri ==>>  ", cmsContent.contentFaqQuestion.contentQuestion);
   //console.log('footer =>',cmsContent.globalContent.globalFooter.description)
 
   //console.log('>>FAQ QUESTION SCREEN data <<',cmsContent.allContentFaqQuestions[0].title);
+  //data.contentFaqQuestion.contentQuestion
+  console.log('>>FAQ QUESTION SCREEN cmsContent.contentFaqQuestion.content <<',cmsContent.contentFaqQuestion.contentQuestion);
+ 
   return (
     <>
       <Head>
@@ -127,7 +157,7 @@ function FAQQuestionScreen({ cmsContent, props }) {
           </Text>
 
           <StructuredText
-            data={cmsContent.contentFaqQuestion.content}
+            data={cmsContent.contentFaqQuestion.contentQuestion}
             customNodeRules={[
               renderNodeRule(isHeading, ({ node, children, key }) => {
                 // const tag =`h${node.level}`;

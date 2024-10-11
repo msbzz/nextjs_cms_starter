@@ -10,7 +10,7 @@ export async function getStaticProps({preview}) {
   const { data: cmsContent } = await cmsService({
     query: `
 query {
-  
+   
   pageFaq {
       pageContent{
         compomentName: __typename
@@ -77,8 +77,7 @@ query {
 }
 
 function FAQAllQuestionsScreen(props){
-  //console.log('>>> FAQ ALL props.cmsContent <<<',props.cmsContent.pageFaq.pageContent);
-  console.log('>>> FAQ ALL props.cmsContent new <<<',props.cmsContent);
+ 
   return ( 
    <CMSSectionRender pageName="pageFaq" {...props}/>
    )
