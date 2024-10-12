@@ -4,7 +4,6 @@ import { Footer } from "../../components/commons/Footer";
 import SEOBlocks from "./SEOBlocks";
 import PagehomeHerosection from "./PagehomeHerosection";
 import PagFaqDisplayQuestions from '../cmsSections/pagFaqDisplayQuestions'
-import PagFaqDisplayScreen from "./PagFaqDisplayScreen";
 export const cmsSections= {
   
 
@@ -15,9 +14,6 @@ export const cmsSections= {
     return <PagFaqDisplayQuestions {...props}/>;
   },
   
-  PagefaqDisplayScreeeRecord:(props)=>{
-    <PagFaqDisplayScreen {...props}/>
-  },
    
   CommonSeoBlockRecord:(props)=> <SEOBlocks {...props}/>,
   CommonMenuRecord:(props)=> <Menu {...props}/>,

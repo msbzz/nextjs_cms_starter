@@ -6,8 +6,7 @@ import { cmsService } from "../../infra/cms/cmsService";
 import { renderNodeRule, StructuredText } from "react-datocms";
 import { isHeading } from "datocms-structured-text-utils";
 import { pageHOC } from "../../components/wrappers/pageHOC";
-import CMSProvider from "../../infra/cms/CMSProvider";
-import { CMSSectionRender } from "../../infra/cms/CMSSectionRender";
+ 
 
 
 const extractText = (content) => {
@@ -47,16 +46,14 @@ query($first:IntType,$skip:IntType){
       skip: 0,
     },
   });
-  //console.log(">>>FAQQuestionScreen teste getStaticPaths <<<", data.allContentFaqQuestions);
-
+   
   const paths1 = data.allContentFaqQuestions.map(({ id }) => {
     return {
       params: { id },
     }
   })
 
-  // const paths = "";
-  //console.log(">>>FAQQuestionScreen teste paths1 <<<", paths1);
+   //console.log(">>>FAQQuestionScreen teste paths1 <<<", paths1);
 
   return {
     paths: paths1,
@@ -125,7 +122,7 @@ function FAQQuestionScreen({ cmsContent, props }) {
 
   //console.log('>>FAQ QUESTION SCREEN data <<',cmsContent.allContentFaqQuestions[0].title);
   //data.contentFaqQuestion.contentQuestion
-  console.log('>>FAQ QUESTION SCREEN cmsContent.contentFaqQuestion.content <<',cmsContent.contentFaqQuestion.contentQuestion);
+  //console.log('>>FAQ QUESTION SCREEN cmsContent.contentFaqQuestion.content <<',cmsContent.contentFaqQuestion.contentQuestion);
  
   return (
     <>
@@ -171,11 +168,6 @@ function FAQQuestionScreen({ cmsContent, props }) {
               }),
             ]}
           />
-
-          {/* <pre>
-            {JSON.stringify(content,null,4)}
-          </pre> */}
-          {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
         </Box>
       </Box>
       <Footer />

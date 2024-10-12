@@ -1,6 +1,5 @@
 import { Box, Text, Link, Image, theme } from "../../../theme/components";
-import { cmsService } from "../../../infra/cms/CMSSectionRender";
-import { CMSSectionRender } from "../../../infra/cms/CMSSectionRender";
+ 
 
 export default function PagFaqDisplayQuestions(props) {
   // Função para extrair texto do conteúdo aninhado em `span`
